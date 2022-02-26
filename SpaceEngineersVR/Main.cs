@@ -44,15 +44,13 @@ namespace SpaceEnginnersVR
             var configPath = Path.Combine(MyFileSystem.UserDataPath, ConfigFileName);
             config = PersistentConfig<PluginConfig>.Load(configPath);
 
+            Common.SetPlugin(this);
+
             try
             {
-                if (Initialize())
+                if (!Initialize())
                 {
-                    Common.SetPlugin(this);
-                }
-                else
-                {
-                    return;
+                    failed = true;
                 }
             }
             catch (Exception ex)
@@ -100,14 +98,12 @@ namespace SpaceEnginnersVR
             if (!OpenVR.IsRuntimeInstalled())
             {
                 MyLog.Default.WriteLine("SpaceEngineersVR: OpenVR not found!");
-                failed = true;
                 return false;
             }
 
             if (!OpenVR.IsHmdPresent())
             {
                 MyLog.Default.WriteLine("SpaceEngineersVR: No VR headset found, please plug one in and reboot the game to play");
-                failed = true;
                 return false;
             }
 
@@ -119,7 +115,6 @@ namespace SpaceEnginnersVR
             if (error != EVRInitError.None)
             {
                 Logger.Critical("Failed to connect to SteamVR!");
-                failed = true;
                 return false;
             }
 

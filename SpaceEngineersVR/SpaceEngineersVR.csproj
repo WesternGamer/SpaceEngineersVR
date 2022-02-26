@@ -536,7 +536,6 @@
     <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="GUI\MyPluginConfigDialog.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Patches\CharacterRenderDisabler.cs" />
     <Compile Include="Patches\FrameInjections.cs" />
     <Compile Include="Patches\PlayerAndCameraDisabler.cs" />
     <Compile Include="Patches\SimulationUpdater.cs" />
