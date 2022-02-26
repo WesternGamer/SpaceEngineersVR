@@ -32,7 +32,6 @@ namespace SpaceEnginnersVR
         private PersistentConfig<PluginConfig> config;
         private static readonly string ConfigFileName = $"{Common.Name}.cfg";
 
-        private static readonly object InitializationMutex = new object();
         private static bool failed;
 
         private static Headset Headset;
@@ -45,27 +44,25 @@ namespace SpaceEnginnersVR
             var configPath = Path.Combine(MyFileSystem.UserDataPath, ConfigFileName);
             config = PersistentConfig<PluginConfig>.Load(configPath);
 
-            lock (InitializationMutex)
+            try
             {
-                try
+                if (Initialize())
                 {
-                    if (Initialize())
-                    {
-                        Common.SetPlugin(this);
-                    } 
-                    else
-                    {
-                        return;
-                    }
-                } 
-                catch (Exception ex)
+                    Common.SetPlugin(this);
+                }
+                else
                 {
-                    MyLog.Default.WriteLine("SpaceEngineersVR: Failed to start!");
-                    MyLog.Default.WriteLine(ex.Message);
-                    MyLog.Default.WriteLine(ex.StackTrace);
                     return;
                 }
             }
+            catch (Exception ex)
+            {
+                MyLog.Default.WriteLine("SpaceEngineersVR: Failed to start!");
+                MyLog.Default.WriteLine(ex.Message);
+                MyLog.Default.WriteLine(ex.StackTrace);
+                return;
+            }
+
             Logger.Debug("Successfully initialized.");
         }
 
